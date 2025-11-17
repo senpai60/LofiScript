@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Playground from "../components/layout/Playground";
 import Console from "../components/ui/Console";
+import { codeApi } from "../api/codeApi";
 
 const problemData = {
   title: "Format Sentence",
@@ -38,14 +39,20 @@ function formatSentence(str) {
 
 function ProblemPage() {
   const [code, setCode] = useState(defaultCode);
-
-  const handleRunCode = (e) => {
+  const [codeOutput, setCodeOutput] = useState(null);
+  const handleRunCode = async (e) => {
     e.preventDefault();
-    console.log(code);
+    try {
+      const response = await codeApi.post("/run", { code });
+      setCodeOutput(response.data?.output);
+    } catch (err) {
+      console.error(err);
+    }
   };
   const handleResetCode = (e) => {
     e.preventDefault();
     setCode(defaultCode);
+    setCodeOutput("");
   };
 
   return (
@@ -67,6 +74,7 @@ function ProblemPage() {
           </div>
         </div>
       </section>
+      {codeOutput && (<Console label={"code output:"} consoleText={codeOutput} />)}
       <div className="interactions flex gap-2">
         <button
           className="p-3 bg-green-500 text-white rounded my-2"
