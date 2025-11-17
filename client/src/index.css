@@ -1,9 +1,19 @@
-
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 @import 'tailwindcss';
 
 :root{
-  --bg-main:#2C3930;
+  /* --bg-main:#2C3930; */
+  --bg-main:black;
   --accent-color:#3f5145;
+  --accent-color-200:#19211c;
+  --hover-color:#1b221e;
   --ht-color:#EAE4D5;
   --t-color:#B6B09F;
+}
+
+.console{
+   font-family: "IBM Plex Mono", monospace;
+}
+.inter{
+  font-family: "Inter", sans-serif;
 }

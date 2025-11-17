@@ -1,8 +1,8 @@
 import Editor from "@monaco-editor/react";
 
-function Playground({ code, setCode }) {
+function Playground({ code, setCode ,theme}) {
   return (
-    <section className="w-full h-120 bg-[#1E1E1E] p-5 rounded">
+    <section className="w-full h-120 bg-[#1E1E1E] p-5 rounded console">
       <h1 className="text-(--t-color)">your code goes here://</h1>
 
       <Editor
@@ -10,7 +10,7 @@ function Playground({ code, setCode }) {
         height="420px"
         language="javascript"
         value={code}                 // ⭐ controlled input
-        theme="vs-dark"
+        theme={theme}
         onChange={(value) => setCode(value ?? "")}
         options={{
           minimap: { enabled: false },
