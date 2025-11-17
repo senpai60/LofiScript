@@ -6,6 +6,7 @@ export default function PlaylistCard({
   title = "Untitled",
   description = "No description provided.",
   tags = [],
+  problems=[],
   onView = () => {},
   onArchive = () => {},
 }) {

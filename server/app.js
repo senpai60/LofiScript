@@ -1,9 +1,18 @@
+import { connectDB } from "./config/connectDB.config.js";
+connectDB()
+
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import {corsOption} from './config/corsOptions.config.js'
+
 import codeRoutes from "./routes/code.routes.js";
+import usersRoutes from "./routes/user.routes.js"
+import problemInjectRoutes from "./routes/problemInject.routes.js"
+import playlistInjectRoutes from "./routes/playlistInject.routes.js";
+import playlistsRoutes from "./routes/playlists.routes.js";
 
 const app = express();
 
@@ -11,7 +20,8 @@ const app = express();
 // 🚀 Middlewares
 // =============================
 app.use(morgan("dev"));              // Request logger
-app.use(cors(corsOption));                     // Enable CORS
+app.use(cors(corsOption)); 
+app.use(cookieParser())                    // Enable CORS
 app.use(helmet());                   // Basic security headers
 app.use(express.json());             // Parse JSON body
 app.use(express.urlencoded({ 
@@ -32,6 +42,11 @@ app.get("/", (req, res) => {
 // 🛣️ API Routes
 // =============================
 app.use("/code", codeRoutes);
+app.use('/users',usersRoutes)
+app.use("/playlists", playlistsRoutes);
+app.use("/inject-problems",problemInjectRoutes)
+app.use("/inject-playlist", playlistInjectRoutes);
+
 
 // =============================
 // ❗ Global Error Handler

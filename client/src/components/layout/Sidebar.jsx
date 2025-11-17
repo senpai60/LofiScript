@@ -8,7 +8,7 @@ export default function Sidebar() {
      ${pathname === path ? "bg-(--accent-color) text-white" : "hover:bg-(--hover-color) hover:text-white"}`;
 
   return (
-    <aside className="w-64 min-h-screen p-5 shadow-lg text-(--t-color)">
+    <aside className="w-64 min-h-screen p-5 shadow-lg text-(--t-color) border-r border-zinc-900">
       <h1 className="text-2xl font-bold mb-6">My App</h1>
 
       <nav className="flex flex-col">

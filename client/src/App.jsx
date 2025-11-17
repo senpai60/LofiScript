@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import ProblemPage from "./pages/ProblemPage";
 import AboutPage from "./pages/AboutPage";
 import QuestionPage from "./pages/QuestionPage";
+import AuthPage from "./pages/AuthPage";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/problems" element={<ProblemPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/quests" element={<QuestionPage />} />
+          <Route path="/auth" element={<AuthPage />} />
         </Routes>
       </main>
 
