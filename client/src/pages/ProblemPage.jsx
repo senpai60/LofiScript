@@ -1,47 +1,76 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Playground from "../components/layout/Playground";
 import Console from "../components/ui/Console";
 import { codeApi } from "../api/codeApi";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { playlistApi } from "../api/playlistApi";
 
-const problemData = {
-  title: "Add Two Numbers",
+// const problemData = {
+//   title: "Add Two Numbers",
 
-  description: `
-Write a function:
+//   description: `
+// Write a function:
 
-    add(a, b)
+//     add(a, b)
 
-that takes **two numbers** and returns **their sum**.
+// that takes **two numbers** and returns **their sum**.
 
-Example:
-add(3, 5) → 8
+// Example:
+// add(3, 5) → 8
 
-Rules:
-1. Inputs will always be numbers.
-2. Return the result directly.
-  `,
+// Rules:
+// 1. Inputs will always be numbers.
+// 2. Return the result directly.
+//   `,
 
-  input: `add(3, 10)`,
-  output: `13`,
+//   input: `add(3, 10)`,
+//   output: `13`,
 
-  constraints: `
-- No type conversion allowed.
-- No external libraries.
-- Keep the function simple.
-  `,
-};
+//   constraints: `
+// - No type conversion allowed.
+// - No external libraries.
+// - Keep the function simple.
+//   `,
+// };
 
-const defaultCode = `
-function formatSentence(str) {
-  return str.trim();
-}
-`;
+// const defaultCode = `
+// function formatSentence(str) {
+//   return str.trim();
+// }
+// `;
 
 function ProblemPage() {
+  const [defaultCode, setDefaultCode] = useState("");
   const [code, setCode] = useState(defaultCode);
   const [codeOutput, setCodeOutput] = useState(null);
   const [codeTheme, setCodeTheme] = useState("vs-dark");
   const consoleRef = useRef(null);
+  const [problemData, setProblemData] = useState(null);
+
+  const { problemId } = useParams();
+  const location = useLocation();
+  const playlistId = location.state?.playlistId;
+
+  const goTo = useNavigate();
+
+  useEffect(() => {
+    const fetchProblem = async () => {
+      try {
+        const response = await playlistApi.get(`/problem/${problemId}`);
+        setProblemData(response.data?.problem);
+        setDefaultCode(response.data?.problem?.starterCode);
+        console.log(response.data?.problem?.starterCode);
+        console.log(response.data.problem);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchProblem();
+  }, [problemId]);
+
+  useEffect(() => {
+    setCode(defaultCode);
+  }, [defaultCode]);
 
   const handleRunCode = async (e) => {
     e.preventDefault();
@@ -67,20 +96,31 @@ function ProblemPage() {
 
   return (
     <section className="w-full min-h-screen">
+      <button
+        className="px-3 py-2 rounded text-(--t-color) border border-(--t-color) mb-5"
+        onClick={() => goTo(`/quests/${playlistId}`)}
+      >
+        Go Back
+      </button>
       <section className="w-full h-full flex justify-between mb-10">
         <div className="problem">
-          <h1 className="text-4xl text-(--ht-color)">{problemData.title} //</h1>
+          <h1 className="text-4xl text-(--ht-color)">
+            {problemData?.title} //
+          </h1>
 
           <p className="text-(--t-color) my-5 whitespace-pre-wrap">
-            {problemData.description}
+            {problemData?.description}
           </p>
         </div>
 
         <div className="examples">
           <h1 className="text-4xl text-(--ht-color) my-5">Example://</h1>
           <div className="io">
-            <Console label={"input:"} consoleText={problemData.input} />
-            <Console label={"output:"} consoleText={problemData.output} />
+            <Console label={"input:"} consoleText={problemData?.inputExample} />
+            <Console
+              label={"output:"}
+              consoleText={problemData?.outputExample}
+            />
           </div>
         </div>
       </section>

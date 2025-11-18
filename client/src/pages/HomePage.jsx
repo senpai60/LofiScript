@@ -49,15 +49,17 @@ function Home() {
   useEffect(() => {
     const fetchPlaylists = async () => {
       const response = await playlistApi.get("/");
-      setPlaylists(response.data?.playlists || []);
+       setPlaylists(response.data.playlists)
       console.log(response.data?.playlists[0]);
     };
     fetchPlaylists();
   }, []);
 
   const onView = (playlistId) =>{
-    navigate(`/quests/:${playlistId}`)
+    navigate(`/quests/${playlistId}`)
   }
+
+  
 
   return (
     <section className="w-full min-h-screen overflow-y-auto flex flex-wrap gap-5">
@@ -68,6 +70,7 @@ function Home() {
           title={playlist?.playlistName}
           description={""}
           tags={playlist?.tags}
+          onView={onView}
         />
       ))}
     </section>

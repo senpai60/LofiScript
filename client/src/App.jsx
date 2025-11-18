@@ -18,9 +18,9 @@ function App() {
       <main className="flex-1 p-10 overflow-y-auto">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/problems" element={<ProblemPage />} />
+          <Route path="/problem/:problemId" element={<ProblemPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/quests" element={<QuestionPage />} />
+          <Route path="/quests/:playlistId" element={<QuestionPage />} />
           <Route path="/auth" element={<AuthPage />} />
         </Routes>
       </main>

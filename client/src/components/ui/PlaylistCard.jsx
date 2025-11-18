@@ -6,13 +6,13 @@ export default function PlaylistCard({
   title = "Untitled",
   description = "No description provided.",
   tags = [],
-  problems=[],
+  playlistId,
   onView = () => {},
   onArchive = () => {},
 }) {
   return (
     <article
-      className="max-w-md w-full bg-(--accent-color) border-gray-200 rounded-2xl shadow-md p-5 flex flex-col gap-4"
+      className="max-w-md w-full bg-(--accent-color) max-h-50 border-gray-200 rounded-2xl shadow-md p-5 flex flex-col gap-4"
       aria-label={`Playlist card: ${title}`}
     >
       {/* Title + tag row */}
@@ -64,7 +64,7 @@ export default function PlaylistCard({
       {/* Actions */}
       <div className="mt-auto flex items-center gap-3">
         <button
-          onClick={onView}
+          onClick={()=>onView(playlistId)}
           className="transition-all ease-[[cubic-bezier(0.4, 0.0, 0.2, 1)] flex-1 px-4 py-2 rounded-lg bg-(--accent-color-200) text-white font-medium shadow-sm hover:bg-(--hover-color) focus:outline-none cursor-pointer focus:ring-2 focus:ring-blue-300"
           aria-label={`View questions for ${title}`}
         >

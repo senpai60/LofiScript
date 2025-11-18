@@ -1,5 +1,7 @@
-import React, { useEffect } from 'react'
-import QuestionCard from '../components/ui/QuestionCard';
+import React, { useEffect, useState } from "react";
+import QuestionCard from "../components/ui/QuestionCard";
+import { useParams } from "react-router-dom";
+import { playlistApi } from "../api/playlistApi";
 
 // const problems = [
 //   { id: "1", quest: "Find the largest number in an array." },
@@ -24,22 +26,33 @@ import QuestionCard from '../components/ui/QuestionCard';
 //   { id: "20", quest: "Chunk an array into smaller arrays of size k." }
 // ];
 
+function QuestionPage() {
+  const { playlistId } = useParams();
+  const [problems, setProblems] = useState([]);
 
+  useEffect(() => {
+    console.log("playlistId:", playlistId);
 
-function QuestionPage({problems}) {
-  useEffect(()=>{
-  console.log(problems.length);
-  
-},[])
-  return (
-    <section id='quest-page' className='w-full scroll-hidden h-screen overflow-y-auto flex flex-col gap-10'>
-      {
-        problems.map((quest,idx)=>
-          <QuestionCard key={quest.quest} problem={quest} sNum={idx+1} />
-        )
+    const fetchProblems = async () => {
+      try {
+        const response = await playlistApi.get(`/${playlistId}`);
+        setProblems(response.data?.problems || []);
+      } catch (err) {
+        console.error(err);
       }
+    };
+
+    fetchProblems();
+  }, [playlistId]);
+
+  return (
+    <section className="w-full scroll-hidden h-screen overflow-y-auto flex flex-col gap-10">
+      {problems.map((quest, idx) => (
+        <QuestionCard playlistId={playlistId} key={quest._id || idx} problem={quest} sNum={idx + 1} />
+      ))}
     </section>
-  )
+  );
 }
 
-export default QuestionPage
+
+export default QuestionPage;
