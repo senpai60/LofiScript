@@ -1,22 +1,40 @@
 import express from "express";
 import Problem from "../models/Problem.js";
+import Playlist from "../models/Playlist.js";
 import { problemsSeed } from "../data/problemSeed.js";
 
 const router = express.Router();
 
-// AUTO INJECT 20 PROBLEMS
+// AUTO INJECT PROBLEMS + CREATE PLAYLIST
 router.get("/", async (req, res) => {
   try {
-    await Problem.deleteMany();       // clear old
-    const inserted = await Problem.insertMany(problemsSeed);
+    // 1) DELETE OLD PROBLEMS
+    await Problem.deleteMany();
 
-    res.json({
-      message: "20 problems inserted successfully!",
-      count: inserted.length,
+    // 2) INSERT NEW PROBLEMS
+    const insertedProblems = await Problem.insertMany(problemsSeed);
+
+    // 3) DELETE OLD PLAYLISTS
+    await Playlist.deleteMany();
+
+    // 4) CREATE NEW PLAYLIST WITH ALL PROBLEMS
+    const playlist = await Playlist.create({
+      playlistName: "Best JS 30+",
+      problems: insertedProblems.map(p => p._id),  // insert IDs
+      tags: ["javascript", "logic", "beginner"]
     });
+
+    // RESPONSE
+    res.json({
+      success: true,
+      message: "Problems injected AND playlist created successfully!",
+      totalProblemsInserted: insertedProblems.length,
+      playlist
+    });
+
   } catch (err) {
-    console.error("Error inserting problems:", err);
-    res.status(500).json({ message: "Error injecting problems" });
+    console.error("🔥 Injection Error:", err);
+    res.status(500).json({ success: false, message: "Error injecting problems and creating playlist" });
   }
 });
 

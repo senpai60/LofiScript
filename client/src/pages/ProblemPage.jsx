@@ -4,6 +4,7 @@ import Console from "../components/ui/Console";
 import { codeApi } from "../api/codeApi";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { playlistApi } from "../api/playlistApi";
+import {useAuth} from "../context/AuthContext"
 
 // const problemData = {
 //   title: "Add Two Numbers",
@@ -51,6 +52,8 @@ function ProblemPage() {
   const location = useLocation();
   const playlistId = location.state?.playlistId;
 
+  const {user} = useAuth()
+
   const goTo = useNavigate();
 
   useEffect(() => {
@@ -59,8 +62,8 @@ function ProblemPage() {
         const response = await playlistApi.get(`/problem/${problemId}`);
         setProblemData(response.data?.problem);
         setDefaultCode(response.data?.problem?.starterCode);
-        console.log(response.data?.problem?.starterCode);
-        console.log(response.data.problem);
+        // console.log(response.data?.problem?.starterCode);
+        // console.log(response.data.problem);
       } catch (err) {
         console.error(err);
       }
@@ -75,8 +78,12 @@ function ProblemPage() {
   const handleRunCode = async (e) => {
     e.preventDefault();
     try {
-      const response = await codeApi.post("/run", { code });
-      setCodeOutput(response.data?.output);
+      const res = await codeApi.post(`/run/${problemId}`, {
+        code,
+        userId: user._id, // send logged-in user
+      });
+
+      setCodeOutput(JSON.stringify(res.data.results, null, 2));
 
       setTimeout(() => {
         consoleRef.current?.scrollIntoView({ behavior: "smooth" });

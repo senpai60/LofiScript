@@ -3,36 +3,25 @@ import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Name is required"],
-    },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      minlength: 6,
-    },
+    name: String,
+    email: { type: String, unique: true },
+    password: String,
+
+    solvedProblems: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Problem" }
+    ]
   },
   { timestamps: true }
 );
 
-// 🔥 PRE-SAVE → Hash password automatically
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next(); // only hash if changed
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 
-// 🔥 Compare password method
-userSchema.methods.matchPassword = async function (enteredPass) {
-  return await bcrypt.compare(enteredPass, this.password);
+userSchema.methods.matchPassword = function (entered) {
+  return bcrypt.compare(entered, this.password);
 };
 
-const User = mongoose.model("User", userSchema);
-export default User
+export default mongoose.model("User", userSchema);
